@@ -1,0 +1,37 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: o8o0o8o
+status: draft
+reviewed: 2026-11-03
+signature: o8o0o8o
+---
+
+<script>
+  import ProblemSplit from '#lib/kb/ProblemSplit.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+#4471 was merged by subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+Read by tenant, form and body, its reports hold three problems with three fixes.
+The queued parser fix closes only the first.
+
+<ProblemSplit ticket={4471} />
+
+## The problems
+
+1. **Parser.** The shared parser reads every date month first. Day-first tenants get day and
+   month swapped. Fix: parse with the tenant's locale.
+2. **Form hint.** `booking-v3` prints `MM/DD/YYYY` under its date field. Day-first tenants'
+   people type month first, and the form reads it day first. The parser fix does not touch
+   this. Fix: print the hint from the tenant's locale.
+3. **One-day move.** Some dates move by one day, not by a swap: the same meeting lands on
+   Tuesday in Lisbon and Monday in Toronto. That is a time zone bug. Fix: store and send
+   dates with their zone.
+
+## Notes
+
+- Intake's tag is a guess from the browser. Many reports tagged `parser` are hint reports, and the reverse.
+- The export repeats some reports across pages. Count by id.
+
+<RenderStamp {signature} />
