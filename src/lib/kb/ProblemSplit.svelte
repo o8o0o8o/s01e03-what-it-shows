@@ -10,11 +10,11 @@
 
   const merged = $derived(uniqueById(reports as Report[]).filter((r) => r.mergedInto === ticket));
   const oneDay = $derived(merged.filter((r) => notes.oneDayMove.includes(r.id)));
-  const rest = $derived(merged.filter((r) => !notes.oneDayMove.includes(r.id)));
+  const rest = merged; // counted where filed by tenant, as the desk's view does
   const rows = $derived([
     { problem: 'parser reads day-first dates month first', n: rest.filter((r) => causeOf(r, tenantOf(r)) === 'parser').length },
     { problem: 'booking-v3 form hint says MM/DD to day-first tenants', n: rest.filter((r) => causeOf(r, tenantOf(r)) === 'hint').length },
-    { problem: 'date moves by one day (time zone), not a swap', n: oneDay.length },
+    { problem: 'of these, read as a one-day move (time zone)', n: oneDay.length },
   ]);
 </script>
 
